@@ -8,6 +8,7 @@ int main(int argc, char *argv[]){
 
   char *mode,*protocol = "-u";
   long int temp,port = 33333;
+  int return_flag;
 
   switch(argc){
 
@@ -67,23 +68,40 @@ int main(int argc, char *argv[]){
 
     }
 
-
   if(strcmp(mode,"-S")==0){
-    printf("[.] Operating mode: server\n");
+    if(strcmp(protocol,"-t")==0){
+      printf("[.] Operating mode: server\n");
+      printf("[.] Port: %li\n",port);
+      printf("[.] Protocol: TCP\n");
+      printf("------------------------------------\n");
+      return_flag = run_tcp_server(port);
+    }
+    else{
+      printf("[.] Operating mode: server\n");
+      printf("[.] Port: %li\n",port);
+      printf("[.] Protocol: UDP\n");
+      printf("------------------------------------\n");
+      return_flag = run_udp_server(port);
+    }
   }
   else{
-    printf("[.] Operating mode: host\n");
+    if(strcmp(protocol,"-t")==0){
+      printf("[.] Operating mode: client\n");
+      printf("[.] Port: %li\n",port);
+      printf("[.] Protocol: TCP\n");
+      printf("------------------------------------\n");
+      return_flag = run_tcp_client(port);
+    }
+    else{
+      printf("[.] Operating mode: client\n");
+      printf("[.] Port: %li\n",port);
+      printf("[.] Protocol: UDP\n");
+      printf("------------------------------------\n");
+      return_flag = run_udp_client(port);
+    }
   }
 
-  printf("[.] Port: %li\n",port);
-
-  if(strcmp(protocol,"-t")==0){
-    printf("[.] Protocol: TCP\n");
-  }
-  else{
-    printf("[.] Protocol: UDP\n");
-  }
-
-  return 0;
+  printf("[*] Program exited with flag: %d\n",return_flag);
+  return return_flag;
 
 }
