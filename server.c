@@ -9,6 +9,7 @@ int run_tcp_server(long int port){
   unsigned int clientLen; //length of client address data structure
   char buffer[256];
   int rw_flag;
+  int close_flag = 0;
 
   printf("[.] RUNNING TCP SERVER\n");
   //creating a TCP socket
@@ -26,31 +27,43 @@ int run_tcp_server(long int port){
     handle_error("[!] bind() failed\n");
   printf("[*] Bind successful \n");
 
-  //Set socket to listen
-  printf("[*] Waiting for connection... \n");
-  listen(serverSocket,1); //set to 1 the maximum length to which the queue of pending connections for sockfd may grow
-  clientLen = sizeof(echoClientAddress);
-
-  if( (clientSocket = accept(serverSocket,(struct sockaddr *) &echoClientAddress,&clientLen)) < 0 )
-    handle_error("[!] accept() failed");
-  printf("[*] Connection accepted \n");
-
   for(;;){
-    bzero(buffer,256);
-    if((rw_flag = read(clientSocket,buffer,255))<0)
-      handle_error("[!] read() failed");
-    printf("[*] Received the following message: %s", buffer);
-    printf("[*] Sending ACK\n");
+    //Set socket to listen
+    printf("[*] Waiting for connection... \n");
+    listen(serverSocket,1); //set to 1 the maximum length to which the queue of pending connections for sockfd may grow
+    clientLen = sizeof(echoClientAddress);
 
-    if((rw_flag = write(clientSocket,"[S] Got your message",21))<0)
-      handle_error("[!] write() failed");
+    if( (clientSocket = accept(serverSocket,(struct sockaddr *) &echoClientAddress,&clientLen)) < 0 )
+      handle_error("[!] accept() failed");
+    printf("[*] Connection accepted \n");
 
+    for(;;){
+      printf("------------------------------------\n");
+      bzero(buffer,256);
+      if((rw_flag = read(clientSocket,buffer,255))<0)
+        handle_error("[!] read() failed");
+      printf("[*] Received the following message: %s", buffer);
+      printf("[*] Sending ACK\n");
 
+      close_flag = strcmp(buffer,"close()\n");
+
+      if((rw_flag = write(clientSocket,"[S] Got your message",21))<0)
+        handle_error("[!] write() failed");
+
+      if(close_flag == 0){
+        printf("[*] Ending connection with client\n");
+        break;
+      }
+
+    }
+    close(clientSocket);
+    printf("[*] Client socket closed\n");
   }
   //loop
   //Accept new connection
   //Communicate
   //Close the connection
+  close(serverSocket);
   return 0;
 
 }
@@ -109,7 +122,7 @@ int run_udp_server(long int port){
 
 
   }
-
+close(serverSocket);
 return 0;
 
 }

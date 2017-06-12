@@ -7,6 +7,8 @@ int run_tcp_client(char *host,long int port){
   struct sockaddr_in server_addr;
   struct hostent *server;
   char buffer[256];
+  int close_flag = 0;
+
 
   if( (clientSocket = socket(AF_INET,SOCK_STREAM,0)) < 0)
     handle_error("[!] socket() failed\n");
@@ -28,20 +30,33 @@ int run_tcp_client(char *host,long int port){
   printf("[*] Connection successful\n");
 
   for(;;){
-    printf("[*] Enter the message to be sent: > ");
+    printf("------------------------------------\n");
     bzero(buffer,256);
+    printf("[*] Enter the message to be sent: > ");
     fgets(buffer,255,stdin);
+
+
 
     if((rw_flag = write(clientSocket,buffer,strlen(buffer))) < 0)
       handle_error("[!] write() error \n");
     printf("[*] Write successful\n");
 
+    close_flag = strcmp(buffer,"close()\n");
+
     bzero(buffer,256);
     if((rw_flag = read(clientSocket,buffer,255)) < 0)
       handle_error("[!] read() error \n");
-    printf("[*] ACK received\n");
+    printf("[*] ACK received: ");
     printf("%s\n", buffer);
+
+    if(close_flag == 0){
+      printf("[*] Ending connection with server\n");
+      break;
+    }
+
   }
+  close(clientSocket);
+  printf("[*] Client socket closed\n");
   return 0;
 }
 
@@ -49,12 +64,12 @@ int run_tcp_client(char *host,long int port){
 int run_udp_client(char *host, long int port){
   printf("[.] RUNNING UDP CLIENT\n");
 
-  int sock, length, n;
+  int clientSocket, length, n;
   struct sockaddr_in server, from;
   struct hostent *hp;
   char buffer[256];
 
-  if( (sock = socket(AF_INET, SOCK_DGRAM,0)) < 0)
+  if( (clientSocket = socket(AF_INET, SOCK_DGRAM,0)) < 0)
     handle_error("[!] socket() failed\n");
   printf("[*] Socket created \n");
 
@@ -71,15 +86,17 @@ int run_udp_client(char *host, long int port){
   printf("[*]Enter message to be sent:\n> ");
   bzero(buffer,256);
   fgets(buffer,255,stdin);
-  if( (n = sendto(sock,buffer,strlen(buffer),0,&server,length)) < 0)
+  if( (n = sendto(clientSocket,buffer,strlen(buffer),0,&server,length)) < 0)
     handle_error("[!] sendto() failed");
 
-  if( (n = recvfrom(sock,buffer,256,0,&from,&length)) < 0)
+  if( (n = recvfrom(clientSocket,buffer,256,0,&from,&length)) < 0)
     handle_error("[!] recvfrom() failed");
 
   printf("[*] ACK received: ");
   printf("%s\n",buffer);
 
+  close(clientSocket);
+  printf("[*] Client socket closed\n");
 
   return 0;
 }
