@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-PROJECT(TRAB_RC)
+PROJECT(nhem3)
 
-add_executable(TRAB_RC
+add_executable(nhem3
     main.c
-    client.c
+    common.c
     server.c
+    client.c
 )
-set_property(TARGET TRAB_RC PROPERTY C_STANDARD 11)
+set_property(TARGET nhem3 PROPERTY C_STANDARD 11)

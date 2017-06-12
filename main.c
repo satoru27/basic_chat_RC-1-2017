@@ -17,18 +17,24 @@ int main(int argc, char *argv[]){
       return -1;
 
     case 2:
+      /*
       if(strcmp(argv[1],"-S")!=0 && strcmp(argv[1],"host")!=0){
+
+
         printf("[!] Invalid mode, exiting...\n");
         return -1;
       }
+      */
         mode=argv[1];
         break;
 
     case 3:
+/*
       if(strcmp(argv[1],"-S")!=0 && strcmp(argv[1],"host")!=0 ){
         printf("[!] Invalid mode, exiting...\n");
         return -1;
       }
+*/
       mode=argv[1];
       temp = strtol(argv[2],NULL,0);
       if(temp < 1025){
@@ -43,10 +49,12 @@ int main(int argc, char *argv[]){
       if(argc > 4){
         printf("[!] Too many arguments (max = 3), exceeding arguments were ignored\n");
       }
+      /*
       if(strcmp(argv[1],"-S")!=0 && strcmp(argv[1],"host")!=0 ){
         printf("[!] Invalid mode, exiting...\n");
         return -1;
       }
+      */
       mode=argv[1];
 
       temp = strtol(argv[2],NULL,0);
@@ -90,14 +98,14 @@ int main(int argc, char *argv[]){
       printf("[.] Port: %li\n",port);
       printf("[.] Protocol: TCP\n");
       printf("------------------------------------\n");
-      return_flag = run_tcp_client(port);
+      return_flag = run_tcp_client(mode,port);
     }
     else{
       printf("[.] Operating mode: client\n");
       printf("[.] Port: %li\n",port);
       printf("[.] Protocol: UDP\n");
       printf("------------------------------------\n");
-      return_flag = run_udp_client(port);
+      return_flag = run_udp_client(mode,port);
     }
   }
 

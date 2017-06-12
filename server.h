@@ -8,6 +8,8 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <unistd.h>
+#include <netdb.h>
+#include "common.h"
 
 #define SERVER_TIMEOUT 10
 //int run_server(long int port,char *protocol);
@@ -18,7 +20,6 @@ int run_udp_server(long int port);
 
 int print_received_message();
 
-int handle_error(char *message);
 
 /*timeout
 time_t start = time();

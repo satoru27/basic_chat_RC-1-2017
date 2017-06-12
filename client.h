@@ -8,6 +8,10 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <unistd.h>
+#include <netdb.h>
+#include "common.h"
+#define CLIENT_TIMEOUT 10
 
-int run_tcp_client(long int port);
-int run_udp_client(long int port);
+int run_tcp_client(char *host, long int port);
+int run_udp_client(char *host, long int port);
+int handle_error(char *message);
