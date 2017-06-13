@@ -1,7 +1,7 @@
 #include "client.h"
 
-
 int run_tcp_client(char *host,long int port){
+
   printf("[.] RUNNING TCP CLIENT\n");
   int clientSocket, rw_flag;
   struct sockaddr_in server_addr;
@@ -9,6 +9,7 @@ int run_tcp_client(char *host,long int port){
   char buffer[256];
   int close_flag = 0;
 
+  signal(SIGALRM,&timeout_error);
 
   if( (clientSocket = socket(AF_INET,SOCK_STREAM,0)) < 0)
     handle_error("[!] socket() failed\n");
@@ -25,6 +26,7 @@ int run_tcp_client(char *host,long int port){
 
   server_addr.sin_port = htons((unsigned short) port);
 
+  alarm(TIMEOUT);
   if((connect(clientSocket,&server_addr,sizeof(server_addr))) < 0)
     handle_error("[!] connect() error \n");
   printf("[*] Connection successful\n");
@@ -36,13 +38,14 @@ int run_tcp_client(char *host,long int port){
     fgets(buffer,255,stdin);
 
 
-
+    alarm(TIMEOUT);
     if((rw_flag = write(clientSocket,buffer,strlen(buffer))) < 0)
       handle_error("[!] write() error \n");
     printf("[*] Write successful\n");
 
     close_flag = strcmp(buffer,"close()\n");
 
+    alarm(TIMEOUT);
     bzero(buffer,256);
     if((rw_flag = read(clientSocket,buffer,255)) < 0)
       handle_error("[!] read() error \n");
@@ -62,12 +65,15 @@ int run_tcp_client(char *host,long int port){
 
 
 int run_udp_client(char *host, long int port){
+
   printf("[.] RUNNING UDP CLIENT\n");
 
   int clientSocket, length, n;
   struct sockaddr_in server, from;
   struct hostent *hp;
   char buffer[256];
+
+  signal(SIGALRM,&timeout_error);
 
   if( (clientSocket = socket(AF_INET, SOCK_DGRAM,0)) < 0)
     handle_error("[!] socket() failed\n");
@@ -86,9 +92,12 @@ int run_udp_client(char *host, long int port){
   printf("[*]Enter message to be sent:\n> ");
   bzero(buffer,256);
   fgets(buffer,255,stdin);
+
+  alarm(TIMEOUT);
   if( (n = sendto(clientSocket,buffer,strlen(buffer),0,&server,length)) < 0)
     handle_error("[!] sendto() failed");
 
+  alarm(TIMEOUT);
   if( (n = recvfrom(clientSocket,buffer,256,0,&from,&length)) < 0)
     handle_error("[!] recvfrom() failed");
 

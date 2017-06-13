@@ -11,6 +11,8 @@ int run_tcp_server(long int port){
   int rw_flag;
   int close_flag = 0;
 
+  signal(SIGALRM,&timeout_error);
+
   printf("[.] RUNNING TCP SERVER\n");
   //creating a TCP socket
   if( (serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0 )
@@ -30,9 +32,11 @@ int run_tcp_server(long int port){
   for(;;){
     //Set socket to listen
     printf("[*] Waiting for connection... \n");
+    alarm(TIMEOUT);
     listen(serverSocket,1); //set to 1 the maximum length to which the queue of pending connections for sockfd may grow
     clientLen = sizeof(echoClientAddress);
 
+    alarm(TIMEOUT);
     if( (clientSocket = accept(serverSocket,(struct sockaddr *) &echoClientAddress,&clientLen)) < 0 )
       handle_error("[!] accept() failed");
     printf("[*] Connection accepted \n");
@@ -40,6 +44,8 @@ int run_tcp_server(long int port){
     for(;;){
       printf("------------------------------------\n");
       bzero(buffer,256);
+
+      alarm(TIMEOUT);
       if((rw_flag = read(clientSocket,buffer,255))<0)
         handle_error("[!] read() failed");
       printf("[*] Received the following message: %s", buffer);
@@ -47,6 +53,7 @@ int run_tcp_server(long int port){
 
       close_flag = strcmp(buffer,"close()\n");
 
+      alarm(TIMEOUT);
       if((rw_flag = write(clientSocket,"[S] Got your message",21))<0)
         handle_error("[!] write() failed");
 
@@ -69,13 +76,15 @@ int run_tcp_server(long int port){
 }
 
 int run_udp_server(long int port){
-  //create a UDP socket
+
+  printf("[.] RUNNING UDP SERVER\n");
+
   int serverSocket,fromlength,n;
   struct sockaddr_in server;
   struct sockaddr_in client;
   char buf[1024];
 
-  printf("[.] RUNNING UDP SERVER\n");
+  signal(SIGALRM,&timeout_error);
 
   if( (serverSocket = socket(AF_INET, SOCK_DGRAM,0)) < 0)
     handle_error("[!] socket() failed\n");
@@ -99,26 +108,19 @@ int run_udp_server(long int port){
   for(;;){
     printf("------------------------------------\n");
     bzero(buf,1024);
+
     printf("[*] Waiting for message\n");
+    alarm(TIMEOUT);
     if ((n = recvfrom(serverSocket,buf,1024,0,(struct sockaddr *) &client,&fromlength)) < 0 )
       handle_error("[!] recvfrom() failed");
 
-/*
-    if(time() > start + SERVER_TIMEOUT){
-        handle_error("[!] SERVER_TIMEOUT on recv");
-    }
-*/
     printf("[S] Received a datagram: ");
     printf("%s",buf);
 
+    alarm(TIMEOUT);
     if ( (n = sendto(serverSocket,"[S] Got your message",21,0,(struct sockaddr *)&client,fromlength)) < 0 )
       handle_error("[!] sendto() failed");
     printf("[*] ACK sent \n");
-/*
-    if(time() > start + SERVER_TIMEOUT){
-        handle_error("[!] SERVER_TIMEOUT on sendto");
-    }
-*/
 
 
   }

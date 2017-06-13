@@ -6,3 +6,10 @@ int handle_error(char *message){
   printf("[!] Exiting...\n");
   exit(1);
 }
+
+void timeout_error(){
+  printf("------------------------------------\n");
+  printf("[!] Program has timed out\n");
+  printf("[!] Exiting...\n");
+  exit(1);
+}
