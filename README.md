@@ -20,10 +20,10 @@ use TCP protocol; if not present, use UDP protocol (default)
 
 This is a project for the course Redes de Computadores (Computer Networks), lectured in the first semester of 2017
 
-#Compiling instructions:
+# Compiling instructions
 After cloning the repo, use "cmake [repo folder]" to generate a makefile for the program, then, compile it with make
 
-#Call example:
+# Call example
 ./nhem3 -S 33345 -t
 
 ./nhem3 localhost 33345 -t
