@@ -11,7 +11,11 @@
 #include <netdb.h>
 #include <signal.h>
 #include <errno.h>
-#define TIMEOUT 10
+
+#define TIMEOUT 30
 
 int handle_error(char *message);
 void timeout_error();
+
+extern int serverSocket;
+extern int clientSocket;

@@ -1,9 +1,9 @@
 #include "client.h"
 
 int run_tcp_client(char *host,long int port){
-
+  //clientSocket is defined globally on common.h
   printf("[.] RUNNING TCP CLIENT\n");
-  int clientSocket, rw_flag;
+  int rw_flag;
   struct sockaddr_in server_addr;
   struct hostent *server;
   char buffer[256];
@@ -65,10 +65,10 @@ int run_tcp_client(char *host,long int port){
 
 
 int run_udp_client(char *host, long int port){
-
+  //clientSocket is defined globally on common.h
   printf("[.] RUNNING UDP CLIENT\n");
 
-  int clientSocket, length, n;
+  int length, n;
   struct sockaddr_in server, from;
   struct hostent *hp;
   char buffer[256];
@@ -89,7 +89,7 @@ int run_udp_client(char *host, long int port){
   server.sin_port = htons((unsigned short) port);
   length = sizeof(struct sockaddr_in);
 
-  printf("[*]Enter message to be sent:\n> ");
+  printf("[*] Enter message to be sent: > ");
   bzero(buffer,256);
   fgets(buffer,255,stdin);
 
