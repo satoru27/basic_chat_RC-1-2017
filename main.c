@@ -1,3 +1,14 @@
+/*
+*
+* Trabalho 1 - Redes de Computadores 01/2017
+* Disciplina: Redes de Computadores
+* Turma: A
+* Professor: Joao Jose Costa Gondim
+* Aluno: Vitor Satoru Machi Matsumine
+* Matricula: 14/0033262
+*
+ */
+
 #include "server.h"
 #include "client.h"
 #include <string.h>
