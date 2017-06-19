@@ -33,4 +33,5 @@ After cloning the repo, use "cmake [repo folder]" to generate a makefile for the
 # Bugs and limitations
 
 -There isn't support for parallel connections.
+
 -If the client inputs a command like "CTRL + C", that command will be sent to the server program running on the terminal and then executed on the server terminal.
