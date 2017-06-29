@@ -34,8 +34,5 @@ After cloning the repo, use "cmake [repo folder]" to generate a makefile for the
 
 -There isn't support for parallel connections.
 
--If the client inputs a command like "CTRL + C", that command will be sent to the server program running on the terminal and then executed on the server terminal.
-
--For some unknown reason when we run the nhem3 without any arguments it displays the correct error message but exits with a segment fault
-
+-If the client inputs a command like "CTRL + C" on a TCP connection, that command will be sent to the TCP server program running on the terminal and then executed on the server terminal.
 
